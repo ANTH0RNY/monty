@@ -1,99 +1,55 @@
 #include "monty.h"
-/**
- * _push - push int to a stack
- * @stack: linked lists for monty stack
- * @line_number: number of line opcode occurs on
- */
-void _push(stack_t **stack, __attribute__ ((unused))unsigned int line_number)
-{
-	stack_t *top;
-	(void)line_number;
 
-	top = malloc(sizeof(stack_t));
-	if (top == NULL)
+/**
+* f_pall - function that prints everything in the stack
+* @head: double head pointer to the stack
+* @counter: unused line count
+*
+* Return: nothing
+*/
+void f_pall(stack_t **head, unsigned int counter)
+{
+	stack_t *h;
+	(void)counter;
+
+	h = *head;
+	if (h == NULL)
+		return;
+	while (h)
 	{
-		fprintf(stderr, "Error: malloc failed\n");
+		printf("%d\n", h->n);
+		h = h->next;
+	}
+}
+
+/**
+* f_swap - function that swaps the top two elements of the stack
+* @head: head of stack
+* @counter: line count
+*
+* Return: nothing
+*/
+void f_swap(stack_t **head, unsigned int counter)
+{
+	stack_t *h;
+	int length = 0, temp;
+
+	h = *head;
+	while (h)
+	{
+		h = h->next;
+		length++;
+	}
+	if (length < 2)
+	{
+		fprintf(stderr, "L%d: can't swap, stack too short\n", counter);
+		fclose(bus.file);
+		free(bus.content);
+		free_stack(*head);
 		exit(EXIT_FAILURE);
 	}
-
-	top->n = var_global.push_arg;
-	top->next = *stack;
-	top->prev = NULL;
-	if (*stack != NULL)
-		(*stack)->prev = top;
-	*stack = top;
-}
-
-/**
- * _pall - print all function
- * @stack: pointer to linked list stack
- * @line_number: number of line opcode occurs on
- */
-void _pall(stack_t **stack, __attribute__ ((unused))unsigned int line_number)
-{
-	stack_t *runner;
-
-	runner = *stack;
-	while (runner != NULL)
-	{
-		printf("%d\n", runner->n);
-		runner = runner->next;
-	}
-}
-
-/**
- * _pint - print int a top of stack
- * @stack: pointer to linked list stack
- * @line_number: number of line opcode occurs on
- *
- */
-void _pint(stack_t **stack, unsigned int line_number)
-{
-	stack_t *runner;
-
-	runner = *stack;
-	if (runner == NULL)
-	{
-		fprintf(stderr, "L%d: can't pint, stack empty\n", line_number);
-		exit(EXIT_FAILURE);
-	}
-	printf("%d\n", runner->n);
-}
-
-/**
- * _pop - remove element a list
- *@stack: pointer to first node
- *@line_number: integer
- *Return: void
- */
-void _pop(stack_t **stack, unsigned int line_number)
-{
-	stack_t *nodo = *stack;
-
-	if (stack == NULL || *stack == NULL)
-	{
-		fprintf(stderr, "L%d: can't pop an empty stack\n", line_number);
-		exit(EXIT_FAILURE);
-	}
-	*stack = nodo->next;
-	if (*stack != NULL)
-		(*stack)->prev = NULL;
-	free(nodo);
-}
-
-/**
- * free_dlistint - free a list
- * @head: pointer to first node
- *
- */
-void free_dlistint(stack_t *head)
-{
-	stack_t *tmp;
-
-	while (head != NULL)
-	{
-		tmp = head->next;
-		free(head);
-		head = tmp;
-	}
+	h = *head;
+	temp = h->n;
+	h->n = h->next->n;
+	h->next->n = temp;
 }
